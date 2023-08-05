@@ -35,7 +35,6 @@ def decor_json(func: Callable):
     data = {}
     def wrapper(*args, **kwargs):
         with open('save.json', 'w') as f_write:
-            dict_koef = {'a': args[0], 'b': args[1], 'c': args[2]}
             data.update({'args: ' + str(args): 'roots: ' + func(*args, **kwargs)})
             json.dump(data, f_write, indent=2, ensure_ascii=False)
     return wrapper
