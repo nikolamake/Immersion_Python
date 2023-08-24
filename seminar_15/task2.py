@@ -1,22 +1,26 @@
+import argparse
+import logging
 from random import randint
 
-class MatrixError(Exception):
-    pass
 
-class MatrixAddEqError(MatrixError):
+logging.basicConfig(level=logging.INFO, encoding="utf-8", filename="task2.log", filemode="a",
+                    format='%(levelname)s, %(asctime)s, %(message)s')
+class MatrixAddEqError(Exception):
     """Исключение при сложении или сравнении 2-х матриц"""
     def __init__(self):
         super().__init__()
     def __str__(self):
+        logging.error('Ошибка! При сложении и сравнении матриц число строк и столбцов должны быть равны')
         return (f'Операция сложения/сравнения матриц невозможна! Число строк - "{matrix_1.line}"'
                 f'/столбцов - "{matrix_1.column}" первой '
                 f'матрицы неравно соответственно числу столбцов - "{matrix_2.column}"/строк - "{matrix_2.line}" второй матрицы!')
 
-class MatrixMulError(MatrixError):
+class MatrixMulError(Exception):
     """Исключение при умножении 2-х матриц"""
     def __init__(self):
         super().__init__()
     def __str__(self):
+        logging.error('Ошибка! При умножении матриц число стобцов неравно числу строк.')
         return (f'Операция умножения матриц невозможна! Число столбцов - "{matrix_1.column}" первой '
                                  f'матрицы неравно числу строк - "{matrix_2.line}" второй матрицы!')
 
@@ -34,6 +38,7 @@ class Matrix:
         self.numbre_botton = numbre_botton
         self.matrix = [[randint(self.numbre_top, self.numbre_botton)
                         for j in range(self.column)] for i in range(self.line)]
+        logging.info(f'Матрица из {line} строк {column} столбцов мин.знач:{numbre_top} макс.знач:{numbre_botton} {self.matrix}')
 
     def __str__(self):
         """Вывод на печать в виде матрицы"""
@@ -44,7 +49,6 @@ class Matrix:
                 sub_res += str(f'{self.matrix[i][j]:>3}') + ' '
             res += sub_res + '\n'
         return res
-
     def __add__(self, other):
         """Сложение двух матриц"""
         if self.line != other.line or self.column != other.column:
@@ -56,7 +60,6 @@ class Matrix:
                 sub_res.append(self.matrix[i][j] + other.matrix[i][j])
             res.append(sub_res)
         return res
-
     def __eq__(self, other):
         """Сравнение двух матриц"""
         if self.line != other.line or self.column != other.column:
@@ -66,7 +69,6 @@ class Matrix:
                 if self.matrix[i][j] != other.matrix[i][j]:
                     return False
         return True
-
     def __mul__(self, other):
         """Умножение двух матриц"""
         if self.column != other.line:
@@ -74,7 +76,7 @@ class Matrix:
         res = [[sum(a * b for a, b in zip(row_a, col_b)) for col_b in zip(*other.matrix)] for row_a in self.matrix]
         return res
 
-
+# print(Matrix(3, 3, 2, 20))
 # matrix_1 = Matrix(3, 3, 2, 20)
 # print('matrix_1' '\n' f'{matrix_1}')
 #
@@ -97,4 +99,28 @@ class Matrix:
 #
 #
 # print(f'Результат сравнения matrix_1 и matrix_2 \n{matrix_1 == matrix_2}')
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='')
+    parser.add_argument('-line', type=int)
+    parser.add_argument('-column', type=int)
+    parser.add_argument('-number_top', type=int)
+    parser.add_argument('-numbre_botton', type=int)
+
+
+    parser.add_argument('-line1', type=int)
+    parser.add_argument('-column1', type=int)
+    parser.add_argument('-number_top1', type=int)
+    parser.add_argument('-numbre_botton1', type=int)
+    args = parser.parse_args()
+    matr1 = print(Matrix(args.line, args.column, args.number_top, args.numbre_botton))
+    matr2 = print(Matrix(args.line1, args.column1, args.number_top1, args.numbre_botton1))
+    print(Matrix.__add__((Matrix(args.line, args.column, args.number_top, args.numbre_botton)),
+                         (Matrix(args.line1, args.column1, args.number_top1, args.numbre_botton1))))
+    print(Matrix.__mul__((Matrix(args.line, args.column, args.number_top, args.numbre_botton)),
+                         (Matrix(args.line1, args.column1, args.number_top1, args.numbre_botton1))))
+    print(Matrix.__eq__((Matrix(args.line, args.column, args.number_top, args.numbre_botton)),
+                         (Matrix(args.line1, args.column1, args.number_top1, args.numbre_botton1))))
+
+
 

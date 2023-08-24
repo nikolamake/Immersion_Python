@@ -37,7 +37,4 @@ class CheckTriangle:
         else:
             print('Треугольник является равнобедренным.')
 
-# CheckTriangle(5,3,4).chek_sides
-# m.chek_sides
-# print(CheckTriangle(5,2,6))
-# CheckTriangle(5,3,4)
+CheckTriangle(5,0,4)
